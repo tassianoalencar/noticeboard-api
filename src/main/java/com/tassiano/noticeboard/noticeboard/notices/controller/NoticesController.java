@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,10 +49,12 @@ public class NoticesController {
     }
 
     @GetMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> details(@PathVariable Long id) {
         Optional<Notice> notice = noticeRepository.findById(id);
 
         if (notice.isPresent()) {
+            notice.get().setVisualizedAt(LocalDateTime.now());
             return ResponseEntity.ok(new NoticeDto(notice.get()));
         }
 
